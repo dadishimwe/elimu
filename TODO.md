@@ -36,6 +36,6 @@
 - Keep copy and team information in structured source files; keep architecture ready for future French translation, biographies, projects, news and profile download without adding those items now.
 - `pnpm check` and `pnpm build` succeed; Astro prerenders the public HTML routes and packages `/api/contact/` and `/sitemap.xml` for serverless serving. No live website has been published.
 
-## 6. GitHub handoff — in progress
-- Push the initial implementation to the user-provided existing repository `https://github.com/dadishimwe/elimu.git` using the authorized GitHub connection, preserving existing repository content/history and never force-pushing. The target repository was confirmed public and empty (no default branch); create the initial `main` commit only if it remains empty.
-- Do not publish the website live; only build, validate and push source as authorized.
+## 6. GitHub handoff — complete
+- The initial implementation was pushed to the user-provided existing repository `https://github.com/dadishimwe/elimu.git` through the authorized GitHub connection, preserving existing repository content/history and without force-pushing. The target repository was confirmed public and empty (no default branch); the initial `main` branch was created with a normal push.
+- The website was not published live; only source was built, validated and pushed as authorized.
