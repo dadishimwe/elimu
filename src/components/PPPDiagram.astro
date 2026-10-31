@@ -1,0 +1,35 @@
+---
+const columns = [
+  {
+    number: '01',
+    title: 'Government provides',
+    points: ['Land and enabling approvals', 'Enabling infrastructure', 'Performance standards and monitoring'],
+  },
+  {
+    number: '02',
+    title: 'Elimu Africa delivers',
+    points: ['Private finance for design, construction and operations', 'Delivery, financing and operational risk', 'Fully priced lifecycle operations and maintenance', 'Asset handback at concession end'],
+  },
+  {
+    number: '03',
+    title: 'Government gains',
+    points: ['Minimal upfront fiscal commitment', 'Faster delivery with limited call on public budgets', 'Predictable, contractually defined service', 'Any support mechanism sized and disclosed transparently'],
+  },
+];
+---
+<section class="ppp-diagram" aria-labelledby="ppp-diagram-title" role="group">
+  <div class="diagram-heading">
+    <div><span class="eyebrow">PPP / BOOT model</span><h2 id="ppp-diagram-title">A clear allocation of roles and risk</h2></div>
+    <p>25–30 year concessions, with risk allocated to the party best able to manage it.</p>
+  </div>
+  <div class="allocation-columns">
+    {columns.map((column, index) => (
+      <section class={`allocation-column allocation-${index + 1}`} tabindex="0" aria-label={`${column.title} responsibilities`}>
+        <span class="allocation-number">{column.number}</span>
+        <h3>{column.title}</h3>
+        <ul>{column.points.map((point) => <li>{point}</li>)}</ul>
+      </section>
+    ))}
+  </div>
+  <p class="diagram-caption">Roles shown as a framework from the corporate profile; individual concession terms are contractually defined.</p>
+</section>

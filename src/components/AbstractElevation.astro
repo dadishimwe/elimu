@@ -1,0 +1,21 @@
+---
+interface Props { variant?: 'hero' | 'small' }
+const { variant = 'hero' } = Astro.props;
+---
+<figure class={`elevation elevation-${variant}`} aria-labelledby="elevation-caption">
+  <svg viewBox="0 0 600 420" role="img" aria-labelledby="elevation-title elevation-desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="elevation-title">Abstract architectural line study</title>
+    <desc id="elevation-desc">A non-literal arrangement of measured verticals, stepped outlines and section lines.</desc>
+    <g fill="none" stroke="currentColor" stroke-width="1.15">
+      <path d="M52 342H555M76 321h465M105 100v221h85V158h111v163h80V75h96v246" opacity=".58" />
+      <path d="M95 342V135h103v207m-86-207v207m57-207v207M290 342V181h99v161m-80-161v161m61-161v161M393 342V52h113v290m-94-290v290m73-290v290" />
+      <path d="M78 135h119m95 46h98M387 52h126M62 355h504M92 367v12m104-12v12m105-12v12m98-12v12m106-12v12" stroke="#C9A86A" />
+      <path d="M66 132h17m-17 3h8m202 43h17m-17 3h8M386 48h17m-17 3h8" />
+      <path d="M54 390h211m-211 7h123" opacity=".55" />
+      <circle cx="504" cy="73" r="25" stroke="#C9A86A" opacity=".7" />
+      <circle cx="504" cy="73" r="4" fill="#C9A86A" stroke="none" />
+      <path d="M504 40v-8m0 82v-8m-33-33h-8m82 0h-8" stroke="#C9A86A" opacity=".72" />
+    </g>
+  </svg>
+  <figcaption id="elevation-caption">A line study, not a project rendering.</figcaption>
+</figure>

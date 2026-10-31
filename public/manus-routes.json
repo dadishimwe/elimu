@@ -1,0 +1,15 @@
+{
+  "routes": [
+    { "path": "/", "title": "Home" },
+    { "path": "/about/", "title": "About" },
+    { "path": "/corporate-philosophy/", "title": "Corporate Philosophy" },
+    { "path": "/governments/", "title": "For Governments" },
+    { "path": "/investors/", "title": "For Investors" },
+    { "path": "/our-approach/", "title": "Our Approach" },
+    { "path": "/team/", "title": "Team" },
+    { "path": "/contact/", "title": "Contact" },
+    { "path": "/privacy/", "title": "Privacy Notice" },
+    { "path": "/terms/", "title": "Terms of Use" },
+    { "path": "/investor-notice/", "title": "Important Notice" }
+  ]
+}

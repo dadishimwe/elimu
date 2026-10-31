@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AbstractElevation from '../components/AbstractElevation.astro';
+import PPPDiagram from '../components/PPPDiagram.astro';
+
+export const prerender = true;
+---
+<BaseLayout title="Elimu Africa" description="An Africa-focused infrastructure platform for purpose-built student accommodation and education-support infrastructure, delivered through PPP and BOOT concessions.">
+  <section class="home-hero">
+    <div class="home-hero-grid">
+      <div class="home-hero-copy">
+        <p class="eyebrow">Education infrastructure · Africa</p>
+        <h1>Student housing is core education infrastructure.</h1>
+        <p class="hero-summary">An Africa-focused infrastructure platform that develops, owns and operates purpose-built student accommodation and education-support infrastructure under PPP and BOOT concessions, in partnership with national and sub-national governments.</p>
+        <div class="hero-actions">
+          <a class="button button-light" href="/governments/">For Governments <span aria-hidden="true">↗</span></a>
+          <a class="hero-text-link" href="/investors/">For Investors <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="home-hero-art"><AbstractElevation variant="hero" /></div>
+      <div class="hero-index"><span>01</span><span>Platform</span><i></i><span>PPP / BOOT</span></div>
+    </div>
+  </section>
+
+  <section class="challenge-section section-wrap">
+    <div class="section-heading-block">
+      <span class="eyebrow">The challenge</span>
+      <h2>Africa’s student housing deficit is holding back its human capital.</h2>
+    </div>
+    <div class="challenge-columns">
+      <article><span class="column-number">01 / Enrolment</span><p>Tertiary enrolment is growing faster than the supply of safe, affordable beds.</p></article>
+      <article><span class="column-number">02 / Outcomes</span><p>Poor accommodation undermines attendance, safety and academic performance.</p></article>
+      <article><span class="column-number">03 / Competitiveness</span><p>Without quality housing, universities struggle to attract students, researchers and talent.</p></article>
+    </div>
+    <p class="pull-quote"><span></span>We treat student housing as core education infrastructure.</p>
+  </section>
+
+  <section class="home-model-section">
+    <div class="model-intro section-wrap">
+      <div><span class="eyebrow">PPP / BOOT model</span><h2>Partnership begins with a clear allocation of roles and risk.</h2></div>
+      <p>Concessions are structured for 25–30 years, with risk allocated to the party best able to manage it.</p>
+    </div>
+    <PPPDiagram />
+  </section>
+
+  <section class="home-thesis section-wrap">
+    <div class="thesis-label"><span class="eyebrow">Our thesis</span><span class="thesis-line"></span></div>
+    <div class="thesis-main">
+      <h2>Built well, student housing can anchor education ecosystems.</h2>
+      <p>University, industry and government converge to develop a nation’s most critical resource: its human capital.</p>
+      <div class="thesis-outcomes">
+        <div><span>01</span><p>Skills development and graduate productivity</p></div>
+        <div><span>02</span><p>Research excellence and innovation capacity</p></div>
+        <div><span>03</span><p>Talent retention and knowledge clusters</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="audience-section">
+    <div class="audience-heading section-wrap">
+      <span class="eyebrow">Explore the platform</span>
+      <h2>Built for long-term education infrastructure.</h2>
+    </div>
+    <div class="audience-list">
+      <a class="audience-link" href="/governments/"><span class="audience-index">01</span><span class="audience-name">For Governments</span><span class="audience-description">PPP / BOOT model and public value</span><span class="audience-arrow" aria-hidden="true">↗</span></a>
+      <a class="audience-link" href="/investors/"><span class="audience-index">02</span><span class="audience-name">For Investors</span><span class="audience-description">Patient institutional capital</span><span class="audience-arrow" aria-hidden="true">↗</span></a>
+      <a class="audience-link" href="/our-approach/"><span class="audience-index">03</span><span class="audience-name">Our Approach</span><span class="audience-description">Delivery, design and stewardship</span><span class="audience-arrow" aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <section class="home-closing">
+    <div class="closing-inner">
+      <span class="eyebrow">Elimu Africa</span>
+      <h2>We don’t just build residences;<br /><em>we build futures.</em></h2>
+      <a class="button button-light" href="/contact/">Contact Elimu Africa <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</BaseLayout>

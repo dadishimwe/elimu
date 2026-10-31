@@ -1,0 +1,58 @@
+---
+const stages = [
+  { id: 'develop', title: 'Develop', text: 'Government provides land and enabling approvals; performance standards and monitoring are part of the model.' },
+  { id: 'build', title: 'Build', text: 'Private finance supports design and construction, with delivery and financing risk assigned through the concession structure.' },
+  { id: 'operate', title: 'Operate', text: 'The concession includes operations and lifecycle maintenance with contractually defined service expectations.' },
+  { id: 'handback', title: 'Hand back', text: 'The asset is handed back at concession end in a defined handback condition.' },
+];
+---
+<section class="lifecycle" aria-labelledby="lifecycle-title">
+  <div class="lifecycle-intro">
+    <span class="eyebrow">Concession lifecycle</span>
+    <h2 id="lifecycle-title">Responsibility across the full term</h2>
+    <p>Follow the stages with the arrow keys or select a stage to read more.</p>
+  </div>
+  <div class="lifecycle-track" role="tablist" aria-label="Concession lifecycle stages">
+    {stages.map((stage, index) => (
+      <button class="lifecycle-step" type="button" role="tab" id={`tab-${stage.id}`} aria-selected={index === 0 ? 'true' : 'false'} aria-controls="lifecycle-detail" tabindex={index === 0 ? 0 : -1} data-stage={stage.id}>
+        <span class="lifecycle-index">0{index + 1}</span><span class="lifecycle-name">{stage.title}</span>
+      </button>
+    ))}
+  </div>
+  <div class="lifecycle-detail" id="lifecycle-detail" role="tabpanel" aria-labelledby="tab-develop" tabindex="0">
+    <p>{stages[0].text}</p>
+  </div>
+</section>
+<script>
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.lifecycle-step'));
+  const panel = document.querySelector<HTMLElement>('#lifecycle-detail');
+  const stageCopy: Record<string, string> = {
+    develop: 'Government provides land and enabling approvals; performance standards and monitoring are part of the model.',
+    build: 'Private finance supports design and construction, with delivery and financing risk assigned through the concession structure.',
+    operate: 'The concession includes operations and lifecycle maintenance with contractually defined service expectations.',
+    handback: 'The asset is handed back at concession end in a defined handback condition.',
+  };
+  const selectStage = (selected: HTMLButtonElement) => {
+    for (const tab of tabs) {
+      const current = tab === selected;
+      tab.setAttribute('aria-selected', String(current));
+      tab.tabIndex = current ? 0 : -1;
+    }
+    const label = selected.querySelector('.lifecycle-name')?.textContent ?? '';
+    const key = selected.dataset.stage ?? '';
+    if (panel) {
+      panel.setAttribute('aria-labelledby', selected.id);
+      panel.innerHTML = `<p><strong>${label}</strong> — ${stageCopy[key] ?? ''}</p>`;
+    }
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectStage(tab));
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') return;
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
+      tabs[next]?.focus();
+      if (tabs[next]) selectStage(tabs[next]);
+    });
+  });
+</script>

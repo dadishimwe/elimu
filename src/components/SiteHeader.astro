@@ -1,0 +1,48 @@
+---
+import { navItems } from '../content/site';
+const { activeNav = '' } = Astro.props;
+---
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="/" aria-label="Elimu Africa home">
+      <span>Elimu Africa</span>
+      <small>EDUCATION INFRASTRUCTURE · AFRICA</small>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation">
+      <span class="menu-toggle-label">Menu</span>
+      <span class="menu-toggle-lines" aria-hidden="true"><i></i><i></i></span>
+    </button>
+    <nav id="primary-navigation" class="primary-navigation" aria-label="Primary navigation">
+      <ul>
+        {navItems.map((item) => (
+          <li><a href={item.href} aria-current={activeNav === item.href ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+        <li class="mobile-contact"><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="header-contact" href="/contact/">Contact <span aria-hidden="true">↗</span></a>
+  </div>
+</header>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const navigation = document.querySelector<HTMLElement>('#primary-navigation');
+  if (button && navigation) {
+    const closeMenu = () => {
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'Open navigation');
+      navigation.classList.remove('is-open');
+    };
+    button.addEventListener('click', () => {
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!isOpen));
+      button.setAttribute('aria-label', isOpen ? 'Open navigation' : 'Close navigation');
+      navigation.classList.toggle('is-open', !isOpen);
+    });
+    navigation.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) closeMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeMenu();
+    });
+  }
+</script>

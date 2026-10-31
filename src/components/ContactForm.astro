@@ -1,0 +1,101 @@
+<form class="contact-form" id="contact-form" novalidate>
+  <div class="form-fields">
+    <label class="form-field">
+      <span>Name <b aria-hidden="true">*</b></span>
+      <input name="name" autocomplete="name" required maxlength="100" aria-describedby="name-error" />
+      <small class="field-error" id="name-error"></small>
+    </label>
+    <label class="form-field">
+      <span>Email address <b aria-hidden="true">*</b></span>
+      <input name="email" type="email" autocomplete="email" required maxlength="254" aria-describedby="email-error" />
+      <small class="field-error" id="email-error"></small>
+    </label>
+    <label class="form-field form-field-wide">
+      <span>Organisation <small>Optional</small></span>
+      <input name="organisation" autocomplete="organization" maxlength="120" />
+    </label>
+    <label class="form-field form-field-wide">
+      <span>Enquiry type <b aria-hidden="true">*</b></span>
+      <select name="audience" required aria-describedby="audience-error">
+        <option value="">Choose an audience</option>
+        <option value="government">Government</option>
+        <option value="investor">Investor</option>
+        <option value="university">University</option>
+        <option value="general">General</option>
+      </select>
+      <small class="field-error" id="audience-error"></small>
+    </label>
+    <label class="form-field form-field-wide">
+      <span>Message <b aria-hidden="true">*</b></span>
+      <textarea name="message" rows="6" required minlength="10" maxlength="4000" aria-describedby="message-error"></textarea>
+      <small class="field-error" id="message-error"></small>
+    </label>
+  </div>
+  <div class="form-honeypot" aria-hidden="true">
+    <label for="company-website">Leave this field empty</label>
+    <input id="company-website" name="companyWebsite" tabindex="-1" autocomplete="off" />
+  </div>
+  <input type="hidden" name="formStartedAt" value="" />
+  <p class="form-privacy">Information provided here is used to respond to your enquiry. See the <a href="/privacy/">Privacy Notice</a>. Do not include sensitive personal information.</p>
+  <div class="form-submit-row">
+    <button class="button button-dark" type="submit"><span>Send enquiry</span><span aria-hidden="true">↗</span></button>
+    <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+  </div>
+</form>
+<script>
+  const form = document.querySelector<HTMLFormElement>('#contact-form');
+  const status = document.querySelector<HTMLElement>('#form-status');
+  if (form) {
+    const startedAt = form.querySelector<HTMLInputElement>('[name="formStartedAt"]');
+    if (startedAt) startedAt.value = String(Date.now());
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!status) return;
+      status.textContent = '';
+      status.classList.remove('is-error', 'is-success');
+      const data = new FormData(form);
+      const fields = ['name', 'email', 'audience', 'message'];
+      let valid = true;
+      for (const name of fields) {
+        const control = form.elements.namedItem(name);
+        if (!(control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement || control instanceof HTMLSelectElement)) continue;
+        const error = form.querySelector<HTMLElement>(`#${name}-error`);
+        const value = control.value.trim();
+        let message = '';
+        if (!value) message = 'This field is required.';
+        else if (name === 'email' && !control.validity.valid) message = 'Enter a valid email address.';
+        else if (name === 'message' && value.length < 10) message = 'Please add a little more detail.';
+        if (error) error.textContent = message;
+        control.setAttribute('aria-invalid', message ? 'true' : 'false');
+        if (message) valid = false;
+      }
+      if (!valid) {
+        status.textContent = 'Please check the highlighted fields.';
+        status.classList.add('is-error');
+        form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        return;
+      }
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      status.textContent = 'Sending your enquiry…';
+      try {
+        const response = await fetch('/api/contact/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(data.entries())),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.message || 'The form could not send your enquiry. Please try again later.');
+        form.reset();
+        if (startedAt) startedAt.value = String(Date.now());
+        status.textContent = 'Thank you. Your enquiry has been sent.';
+        status.classList.add('is-success');
+      } catch (error) {
+        status.textContent = error instanceof Error ? error.message : 'The form could not send your enquiry. Please try again later.';
+        status.classList.add('is-error');
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>

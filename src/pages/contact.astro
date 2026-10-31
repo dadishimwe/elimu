@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+
+export const prerender = true;
+---
+<BaseLayout
+  title="Contact"
+  description="Contact Elimu Africa through the audience-aware enquiry form. Regional presence is Nairobi, Kigali and Johannesburg; the registered office is Kigali, Rwanda."
+  activeNav="/contact/"
+>
+  <section class="page-hero page-hero-compact">
+    <div class="page-hero-inner">
+      <p class="eyebrow">Contact</p>
+      <h1>Start a conversation.</h1>
+      <p class="page-intro">Choose the enquiry type that best describes your message. The contact form is the primary route for enquiries.</p>
+    </div>
+  </section>
+  <section class="contact-layout section-wrap">
+    <div class="contact-context">
+      <div class="context-block">
+        <span class="eyebrow">Regional presence</span>
+        <h2>Nairobi <span>·</span> Kigali <span>·</span> Johannesburg</h2>
+      </div>
+      <div class="context-block">
+        <span class="eyebrow">Registered office</span>
+        <h2>Kigali, Rwanda</h2>
+      </div>
+      <div class="context-block contact-note">
+        <span class="eyebrow">What to expect</span>
+        <p>Your message is routed by enquiry type to the configured contact destination. Please do not include sensitive personal information.</p>
+      </div>
+    </div>
+    <div class="contact-form-wrap">
+      <ContactForm />
+    </div>
+  </section>
+</BaseLayout>
