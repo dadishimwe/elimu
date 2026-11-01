@@ -42,6 +42,7 @@
 - Do not modify the required project branding metadata until approved identity artwork is supplied; the current Manus CDN `logoUrl` is platform branding, not the public site favicon. The site wordmark remains typographic and no unapproved logo is presented as official.
 - `pnpm check` and `pnpm build` succeed; Astro prerenders the public HTML routes and packages `/api/contact/` and `/sitemap.xml` for serverless serving. Do not publish the website live during this pass.
 
-## 5. GitHub handoff for this revision — open
+## 5. GitHub handoff for this revision — complete
 - Push the reviewed revision to the user-provided existing repository `https://github.com/dadishimwe/elimu.git` using the authorized GitHub connection, preserving existing repository content/history. Fetch/integrate `main` before pushing; never force-push or rewrite history.
 - Do not initiate a live Vercel deployment from this task. Verify the final repository branch SHA matches the intended revision.
+- The revision has been pushed normally to both synchronized `main` branches; the project main and requested GitHub main matched at `a637f9174bcfd3e1460733c3dba10d1a6b088e88` before this status update. Neither branch history was rewritten and no separate Vercel deployment command was run.
