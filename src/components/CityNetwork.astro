@@ -1,0 +1,24 @@
+---
+interface Props {
+  mode: 'leadership' | 'regional';
+}
+
+const { mode } = Astro.props;
+const cities = ['Johannesburg', 'Nairobi', 'Kigali'] as const;
+const heading = mode === 'leadership' ? 'Leadership locations' : 'Regional cities';
+---
+<section class:list={['city-network', `city-network--${mode}`]} aria-labelledby={`city-network-${mode}-title`}>
+  <div class="city-network-heading">
+    <span class="eyebrow">{mode === 'leadership' ? 'Across three cities' : 'Regional presence'}</span>
+    <h2 id={`city-network-${mode}-title`}>{heading}</h2>
+  </div>
+  <ol class="city-network-list" aria-label={heading}>
+    {cities.map((city, index) => (
+      <li class="city-network-node">
+        <span class="city-network-index" aria-hidden="true">0{index + 1}</span>
+        <strong>{city}</strong>
+      </li>
+    ))}
+  </ol>
+  <p class="city-network-footnote">Schematic city labels, not a geographic map or a statement of branch offices.</p>
+</section>

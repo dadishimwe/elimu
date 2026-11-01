@@ -1,5 +1,7 @@
 ---
-const columns = [
+interface Props { variant?: 'overview' | 'roles' }
+const { variant = 'overview' } = Astro.props;
+const overviewColumns = [
   {
     number: '01',
     title: 'Government provides',
@@ -13,14 +15,20 @@ const columns = [
   {
     number: '03',
     title: 'Government gains',
-    points: ['Minimal upfront fiscal commitment', 'Faster delivery with limited call on public budgets', 'Predictable, contractually defined service', 'Any support mechanism sized and disclosed transparently'],
+    points: ['Minimal upfront fiscal commitment', 'Faster delivery with a limited call on public budgets', 'Predictable, contractually defined service', 'Any support mechanism sized and disclosed transparently'],
   },
 ];
+const roleColumns = overviewColumns.slice(0, 2);
+const columns = variant === 'roles' ? roleColumns : overviewColumns;
+const title = variant === 'roles' ? 'How responsibilities are shared' : 'A clear allocation of roles and risk';
+const supporting = variant === 'roles'
+  ? 'A two-party view of public inputs and private-sector delivery under a concession.'
+  : '25–30 year concessions, with risk allocated to the party best able to manage it.';
 ---
-<section class="ppp-diagram" aria-labelledby="ppp-diagram-title" role="group">
+<section class:list={['ppp-diagram', variant === 'roles' ? 'ppp-diagram--roles' : '']} aria-labelledby="ppp-diagram-title" role="group">
   <div class="diagram-heading">
-    <div><span class="eyebrow">PPP / BOOT model</span><h2 id="ppp-diagram-title">A clear allocation of roles and risk</h2></div>
-    <p>25–30 year concessions, with risk allocated to the party best able to manage it.</p>
+    <div><span class="eyebrow">PPP / BOOT model</span><h2 id="ppp-diagram-title">{title}</h2></div>
+    <p>{supporting}</p>
   </div>
   <div class="allocation-columns">
     {columns.map((column, index) => (

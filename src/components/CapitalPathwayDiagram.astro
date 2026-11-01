@@ -1,0 +1,25 @@
+---
+const stages = [
+  { title: 'Aligned partners', detail: 'GP co-investment alongside LP partners.' },
+  { title: 'Milestone-based deployment', detail: 'Commitments follow project milestones.' },
+  { title: 'PPP / BOOT concession', detail: 'A 25–30 year concession structure.' },
+  { title: 'Revenue profile', detail: 'Long-term and inflation-linked.' },
+];
+---
+<section class="capital-pathway" aria-labelledby="capital-pathway-title">
+  <div class="capital-pathway-heading">
+    <span class="eyebrow">Capital mobilisation · conceptual</span>
+    <h2 id="capital-pathway-title">From aligned partners to long-term revenue profiles</h2>
+    <p>This sequence reflects the corporate profile; it does not imply project-specific cash flows, returns or terms.</p>
+  </div>
+  <ol class="capital-pathway-steps">
+    {stages.map((stage, index) => (
+      <li class="capital-pathway-step">
+        <span class="capital-step-number" aria-hidden="true">0{index + 1}</span>
+        <h3>{stage.title}</h3>
+        <p>{stage.detail}</p>
+        {index < stages.length - 1 && <span class="capital-pathway-arrow" aria-hidden="true">→</span>}
+      </li>
+    ))}
+  </ol>
+</section>

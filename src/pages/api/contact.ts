@@ -1,3 +1,4 @@
+import { createHmac, randomBytes } from 'node:crypto';
 import type { APIRoute } from 'astro';
 
 export const prerender = false;
@@ -11,23 +12,43 @@ const audienceLabels: Record<string, string> = {
 };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const readServerEnv = (key: string) => process.env[key]?.trim() || (import.meta.env as Record<string, string | undefined>)[key]?.trim();
-const json = (body: Record<string, string>, status = 200) =>
+const json = (body: Record<string, string>, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extraHeaders },
   });
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (char) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[char] ?? char));
 
-export const POST: APIRoute = async ({ request }) => {
-  const maxBodyBytes = 12_000;
-  const contentLengthHeader = request.headers.get('content-length');
-  const contentLength = contentLengthHeader ? Number(contentLengthHeader) : 0;
-  if (contentLengthHeader && (!Number.isSafeInteger(contentLength) || contentLength < 0)) {
-    return json({ message: 'The request could not be read. Please try again.' }, 400);
+const rateLimitWindowMs = 15 * 60 * 1000;
+const rateLimitMaxAttempts = 5;
+const rateLimitMaxEntries = 2000;
+const processPepper = randomBytes(32);
+const rateLimitEntries = new Map<string, { count: number; expiresAt: number }>();
+
+function registerAttempt(address: string, now = Date.now()) {
+  const key = createHmac('sha256', processPepper).update(address).digest('hex');
+  for (const [entryKey, entry] of rateLimitEntries) {
+    if (entry.expiresAt <= now) rateLimitEntries.delete(entryKey);
   }
-  if (contentLength > maxBodyBytes) return json({ message: 'The message is too large. Please shorten it and try again.' }, 413);
+  let entry = rateLimitEntries.get(key);
+  if (!entry) {
+    if (rateLimitEntries.size >= rateLimitMaxEntries) {
+      const oldestKey = rateLimitEntries.keys().next().value;
+      if (oldestKey) rateLimitEntries.delete(oldestKey);
+    }
+    entry = { count: 0, expiresAt: now + rateLimitWindowMs };
+    rateLimitEntries.set(key, entry);
+  }
+  if (entry.count >= rateLimitMaxAttempts) {
+    return { allowed: false, retryAfter: Math.max(1, Math.ceil((entry.expiresAt - now) / 1000)) };
+  }
+  entry.count += 1;
+  return { allowed: true, retryAfter: 0 };
+}
+
+export const POST: APIRoute = async ({ request, clientAddress }) => {
   const origin = request.headers.get('origin');
   const host = request.headers.get('host');
   const forwardedHosts = (request.headers.get('x-forwarded-host') || '').split(',').map((value) => value.trim().toLowerCase()).filter(Boolean);
@@ -39,6 +60,20 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ message: 'The request could not be verified.' }, 403);
     }
   }
+
+  // Vercel instances do not share this small, temporary in-memory limit; it is a best-effort early abuse barrier, not a WAF.
+  const attempt = registerAttempt(clientAddress || 'unknown');
+  if (!attempt.allowed) {
+    return json({ message: 'Too many contact attempts. Please wait before trying again.' }, 429, { 'Retry-After': String(attempt.retryAfter) });
+  }
+
+  const maxBodyBytes = 12_000;
+  const contentLengthHeader = request.headers.get('content-length');
+  const contentLength = contentLengthHeader ? Number(contentLengthHeader) : 0;
+  if (contentLengthHeader && (!Number.isSafeInteger(contentLength) || contentLength < 0)) {
+    return json({ message: 'The request could not be read. Please try again.' }, 400);
+  }
+  if (contentLength > maxBodyBytes) return json({ message: 'The message is too large. Please shorten it and try again.' }, 413);
   if (request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/json') {
     return json({ message: 'The request could not be read. Please try again.' }, 415);
   }
@@ -83,7 +118,7 @@ export const POST: APIRoute = async ({ request }) => {
   const startedAt = Number(body.formStartedAt);
 
   // Honeypot submissions are quietly discarded without contacting the mail provider.
-  if (companyWebsite) return json({ message: 'Thank you. Your enquiry has been sent.' });
+  if (companyWebsite) return json({ message: 'Thank you.' });
   if (!name || name.length > 100 || !emailPattern.test(email) || email.length > 254 ||
       organisation.length > 120 || !allowedAudiences.has(audience) || message.length < 10 || message.length > 4000) {
     return json({ message: 'Please check the form fields and try again.' }, 400);
@@ -126,5 +161,5 @@ export const POST: APIRoute = async ({ request }) => {
   if (!providerResponse.ok) {
     return json({ message: 'We could not deliver your enquiry just now. Please try again later.' }, 502);
   }
-  return json({ message: 'Your enquiry has been sent.' });
+  return json({ message: 'Your enquiry was accepted by the configured email service.' });
 };

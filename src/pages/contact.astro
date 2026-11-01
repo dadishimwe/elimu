@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '../components/ContactForm.astro';
+import CityNetwork from '../components/CityNetwork.astro';
 
 export const prerender = true;
 ---
@@ -19,8 +20,7 @@ export const prerender = true;
   <section class="contact-layout section-wrap">
     <div class="contact-context">
       <div class="context-block">
-        <span class="eyebrow">Regional presence</span>
-        <h2>Nairobi <span>·</span> Kigali <span>·</span> Johannesburg</h2>
+        <CityNetwork mode="regional" />
       </div>
       <div class="context-block">
         <span class="eyebrow">Registered office</span>
@@ -28,11 +28,17 @@ export const prerender = true;
       </div>
       <div class="context-block contact-note">
         <span class="eyebrow">What to expect</span>
-        <p>Your message is routed by enquiry type to the configured contact destination. Please do not include sensitive personal information.</p>
+        <p>The form confirms receipt only after the configured email service accepts your message. If email routing is not yet set up, it will show that the form is unavailable. Please do not include sensitive personal information.</p>
       </div>
     </div>
     <div class="contact-form-wrap">
       <ContactForm />
+    </div>
+  </section>
+  <section class="contact-closing" aria-label="Elimu Africa closing statement">
+    <div class="closing-inner">
+      <span class="eyebrow">Elimu Africa</span>
+      <h2>We don’t just build residences;<br /><em>we build futures.</em></h2>
     </div>
   </section>
 </BaseLayout>
